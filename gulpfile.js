@@ -30,8 +30,8 @@ var path = {
         assets: PUBLIC_DIR + '/assets/',
         js: PUBLIC_DIR + '/js/',
         css: PUBLIC_DIR + '/css/',
-        pageStyle: PUBLIC_DIR + '/css/pages/',
-        img: PUBLIC_DIR + '/img/',
+        staticCSS: PUBLIC_DIR + '/css/',
+        img: PUBLIC_DIR + '/images/',
         fonts: PUBLIC_DIR + '/fonts/',
         pages: PUBLIC_DIR + '/pages/',
         localization: PUBLIC_DIR + '/locales/'
@@ -41,7 +41,7 @@ var path = {
         assets: 'src/assets/**/*.*',
         js: 'src/js/**/*.js',
         style: 'src/scss/*.scss',
-        pageStyle: 'src/scss/pages/*.*',
+        staticCSS: 'src/scss/css/**/*.css',
         img: 'src/img/**/*.*',
         fonts: 'src/fonts/**/*.{ttf,otf,eot,woff,css}',
         pages: 'src/pages/*',
@@ -52,7 +52,7 @@ var path = {
         assets: 'src/assets/**/*.*',
         js: 'src/js/**/*.js',
         style: ['src/scss/**/*.scss'],
-        pageStyle: 'src/scss/pages/*.scss',
+        staticCSS: 'src/css/**/*.css',
         img: 'src/img/**/*.*',
         fonts: 'src/fonts/**/*.{ttf,otf,eot,woff,css}',
         pages: 'src/pages/*.htm',
@@ -122,10 +122,6 @@ gulp.task('clean', function (cb) {
 
 gulp.task('html', function () {
     gulp.src(path.src.html)
-        .pipe(rigger()
-            .on("error", notify.onError(function (error) {
-                return "Error rigger: " + error.message;
-            })))
         .pipe(fileinclude({
             prefix: '@@',
             basepath: '@file',
@@ -256,6 +252,33 @@ gulp.task('styles', function () {
 
 });
 
+gulp.task('staticCSS', function () {
+
+    const b = gulp.src(path.src.staticCSS);
+
+    b// .pipe(sourcemaps.init())
+        .pipe(sass({
+                includePaths: ['src/scss/'],
+                outputStyle: 'compressed',
+                sourceMap: true,
+                errLogToConsole: true,
+                functions: inline_image({url:'src/img/'})
+            })
+                .on("error", notify.onError(function (error) {
+                    return "Error: " + error.message;
+                }))
+        )
+        .pipe(prefixer())
+        .pipe(cssmin())
+        // .pipe(sourcemaps.write())
+        .pipe(gulp.dest(path.build.staticCSS));
+
+    if (process.env.NODE_ENV !== 'production') {
+        b.pipe(reload({stream: true}));
+    }
+
+});
+
 gulp.task('images', function () {
     const b = gulp.src(path.src.img);
 
@@ -295,6 +318,7 @@ gulp.task('build_project' , [
     'vendors',
     'javascript',
     'styles',
+    'staticCSS',
     'fonts',
     'images',
     'localization'
@@ -326,6 +350,12 @@ gulp.task('watch', function(){
         }, 600);
     });
 
+    watch(path.watch.staticCSS, function(event, cb) {
+        setTimeout(function(){
+            gulp.start('staticCSS');
+        }, 600);
+    });
+
     watch([path.watch.js], function(event, cb) {
         gulp.start('javascript');
     });
@@ -347,87 +377,4 @@ gulp.task('watch', function(){
 gulp.task("default", ['build_project', 'webserver'], function () {
     gulp.start('watch');
     reload({stream: true});
-});
-
-gulp.task("deploy", cb => {
-    const S3_BUCKET = 'www.getdrop.net';
-    const CF_DISTRIBUTION_ID = 'E1GGWVIH97EWDO';
-
-    const aws = require('aws-sdk');
-    const bluebird = require('bluebird');
-    const s3 = bluebird.promisifyAll(new aws.S3());
-    const cloudfront = bluebird.promisifyAll(new aws.CloudFront());
-    const mime = require('mime-types');
-
-    uploadDir(PUBLIC_DIR, S3_BUCKET)
-    .then(newS3Keys => removeOldKeys(newS3Keys))
-    .then(() => invalidateCache(CF_DISTRIBUTION_ID, ['/*']))
-    .then(() => cb())
-    .catch(err => cb(err));
-
-    function invalidateCache(distributionId, paths) {
-        console.log("Invalidating cache...");
-        return cloudfront.createInvalidationAsync({
-            DistributionId: distributionId,
-            InvalidationBatch: {
-                CallerReference: '' + Date.now(),
-                Paths: {
-                    Quantity: paths.length,
-                    Items: paths
-                }
-            }
-        });
-    }
-
-    function uploadDir(dirPath, awsBucket, rootDir) {
-        rootDir = rootDir || dirPath;
-
-        let keys = [];
-        return bluebird.map(fs.readdirSync(dirPath), object => {
-            let objectPath = dirPath + '/' + object;
-
-            if(fs.lstatSync(objectPath).isDirectory()) {
-                return uploadDir(objectPath, awsBucket, rootDir)
-                .then(nestedKeys => {keys = keys.concat(nestedKeys)})
-            } else {
-                const awsKey = objectPath.replace(new RegExp('^' + rootDir + '/'), '');
-                keys.push(awsKey);
-                return uploadFile(objectPath, awsBucket, awsKey)
-            }
-        }, {concurrency: 5})
-        .then(() => {
-            return keys;
-        })
-    }
-
-    function uploadFile(filePath, awsBucket, awsKey) {
-        console.log('Start: ', filePath, '->', awsKey);
-        return s3.uploadAsync({
-            Bucket: awsBucket,
-            ACL: 'public-read',
-            Body: fs.createReadStream(filePath),
-            ContentType: mime.lookup(filePath),
-            Key: awsKey,
-        })
-        .tap(() => {
-            console.log('Finish: ', filePath, '->', awsKey);
-        })
-    }
-
-    function removeOldKeys(newKeys) {
-        return s3.listObjectsAsync({
-            Bucket: S3_BUCKET
-        })
-        .then(data => data.Contents)
-        .map(object => {
-            if(newKeys.indexOf(object.Key) === -1) {
-                console.log('Deleting old file: ', object.Key);
-                return s3.deleteObjectAsync({
-                    Bucket: S3_BUCKET,
-                    Key: object.Key
-                });
-            }
-        })
-    }
-
 });
