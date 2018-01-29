@@ -205,7 +205,7 @@
 
         .bg-black {
             padding-top: 103px;
-            padding-bottom: 86px;
+            padding-bottom: 64px;
         }
 
         dl {
@@ -238,4 +238,11 @@
 
     }
 
+    .links {
+        margin-top: 71px;
+
+        &__item {
+            text-align: center;
+        }
+    }
 }
