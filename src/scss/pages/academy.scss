@@ -1,0 +1,241 @@
+@import '../variables';
+
+.academy {
+
+    h2 {
+        font-size: 48px;
+        text-align: center;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    h3 {
+        font-size: 38px;
+        text-align: center;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        line-height: 40px;
+    }
+
+    .graduates-hist {
+        margin-top: 13px;
+
+        &__total {
+            font-family: 'league_gothicregular', sans-serif;
+            font-size: 166px;
+            line-height: 166px;
+            display: inline-block;
+            letter-spacing: 3.3px;
+
+        }
+
+        &__title {
+            font-family: 'proxima_nova_cn_ltlight', sans-serif;
+            font-size: 31px;
+            font-weight: 700;
+            margin-top: 13px;
+            text-transform: uppercase;
+            line-height: 39px;
+            letter-spacing: 2.3px;
+        }
+
+        &__text {
+            font-family: 'proxima_nova_cn_ltlight', sans-serif;
+            font-size: 14px;
+            color: $color-grey;
+            max-width: 400px;
+            line-height: 17px;
+            letter-spacing: 0.4px;
+        }
+
+    }
+
+    .graduates {
+        margin-top: 104px;
+
+        &__slider {
+            margin: 0;
+            padding: 0;
+        }
+
+        &__item {
+            font-family: 'proxima_nova_cn_ltlight', sans-serif;
+            float: left;
+            width: 25%;
+            padding-right: 31px;
+
+            &-name {
+                font-size: 20px;
+                font-weight: bold;
+                margin-top: 16px;
+                letter-spacing: 1.2px;
+                line-height: 24px;
+                text-transform: uppercase;
+            }
+
+            &-course {
+                font-size: 16px;
+                margin-top: 15px;
+                line-height: 19px;
+            }
+
+            &-city {
+                font-size: 12px;
+                margin-top: 20px;
+            }
+
+        }
+
+    }
+
+    .invite {
+        margin-top: 116px;
+
+        &__title {
+            font-family: 'league_gothicregular' , sans-serif;
+            font-size: 62px;
+            text-transform: uppercase;
+            line-height: 1;
+            color: $color-greyText;
+            letter-spacing: 3px;
+        }
+
+        h3 {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        &__text {
+            margin-top: 28px;
+            letter-spacing: 0.3px;
+            line-height: 22.9px;
+        }
+
+    }
+
+    .centers {
+        color: #fff;
+        text-align: center;
+        margin-top: 147px;
+        padding-top: 69px;
+        padding-bottom: 56px;
+        background-image: url('/images/academy-bg-23.svg');
+        background-repeat: no-repeat;
+        background-position: 50%;
+        background-size: auto 100%;
+        
+        h3 {
+            color: #fff;
+        }
+
+        &__text {
+            max-width: 560px;
+            display: inline-block;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+            line-height: 23px;
+        }
+
+        &__cities {
+            display: inline-block;
+            margin: 31px 25px 30px;
+            line-height: 23px;
+            letter-spacing: 0.5px;
+        }
+    }
+
+    .education-program {
+        margin-top: 113px;
+
+        h2 {
+            margin-bottom: 52px;
+        }
+
+        a {
+            display: inline-block;
+            font-size: 14px;
+            font-family: 'proxima_nova_cn_ltlight', sans-serif;
+            letter-spacing: 1px;
+            color: #000;
+            margin-top: 11px;
+            text-decoration: none;
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+        }
+
+        &__item {
+            margin-bottom: 13px;
+        }
+
+    }
+
+    .standards {
+        color: #fff;
+        
+        &__title {
+            font-family: 'league_gothicregular' , sans-serif;
+            font-size: 20.3vw;
+            line-height: 13.6vw;
+            white-space: nowrap;
+            text-align: center;
+            letter-spacing: 0.7vw;
+            margin-top: 114px;
+            color: #000;
+        }
+        &__text {
+            font-family: 'proxima_nova_cn_ltlight', sans-serif;
+            font-size: 16px;
+            line-height: 18px;
+            margin-top: 13px;
+            color: $color-greyText2;
+
+            p {
+                margin-bottom: 20px;
+            }
+        }
+        
+        h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .bg-black {
+            padding-top: 103px;
+            padding-bottom: 86px;
+        }
+
+        dl {
+            font-size: 16px;
+
+            dd {
+                color: $color-greyText2;
+            }
+        }
+
+        .button {
+            width: 100%;
+            margin-top: 21px;
+        }
+
+        a:not(.button) {
+            display: inline-block;
+            font-size: 16px;
+            font-family: 'proxima_nova_cn_ltlight', sans-serif;
+            letter-spacing: 0.3px;
+            color: #fff;
+            margin-top: 16px;
+            text-decoration: none;
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+    }
+
+}

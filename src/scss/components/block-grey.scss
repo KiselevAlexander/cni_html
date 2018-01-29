@@ -1,0 +1,28 @@
+dl {
+    font-size: 14px;
+
+    dt {
+        font-family: 'league_gothicregular' , sans-serif;
+        font-size: 4.429em;
+        text-transform: uppercase;
+        line-height: 1;
+        color: $color-greyText;
+        letter-spacing: 0.048em;
+        font-weight: normal;
+    }
+
+    dd {
+        font-family: 'proxima_nova_cn_ltlight' , sans-serif;
+        margin-top: 1em;
+        line-height: 1.143em;
+        letter-spacing: 0.036em;
+
+        b {
+            display: block;
+            font-size: 1.286em;
+            letter-spacing: 0.067em;
+            line-height: 1em;
+            margin-bottom: 0.778em;
+        }
+    }
+}

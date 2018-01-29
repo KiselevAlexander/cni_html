@@ -1,7 +1,0 @@
-[data-animation] {
-    animation-duration: .5s;
-}
-
-[data-animation]:not(.animated) {
-    opacity: 0;
-}

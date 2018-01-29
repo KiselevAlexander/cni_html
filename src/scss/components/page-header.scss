@@ -1,0 +1,27 @@
+.page-header {
+    text-align: center;
+    margin-top: 0;
+    padding-bottom: 92px;
+    background-color: $color-lightGrey;
+
+    .breadcrumb {
+        font-size: 14px;
+        line-height: 28px;
+        letter-spacing: 0.51px;
+        margin-bottom: 37px;
+    }
+
+    h1 {
+        font-size: 38px;
+        letter-spacing: 1.6px;
+        margin-bottom: 2px;
+    }
+
+    &__text {
+        font-family: 'proxima_nova_cn_ltlight', sans-serif;
+        font-size: 18px;
+        max-width: 425px;
+        margin: 0 auto;
+        line-height: 22px;
+    }
+}

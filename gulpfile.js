@@ -39,8 +39,10 @@ var path = {
     src: {
         html: 'src/html/*.html',
         assets: 'src/assets/**/*.*',
-        js: 'src/js/**/*.js',
-        style: 'src/scss/*.scss',
+        js: ['src/js/**/*.js', '!src/js/static/'],
+        jsStatic: 'src/js/static/**/*.js',
+        style: ['src/scss/*.scss', '!src/scss/pages/'],
+        pagesStyles: 'src/scss/pages/*.scss',
         staticCSS: 'src/scss/css/**/*.css',
         img: 'src/img/**/*.*',
         fonts: 'src/fonts/**/*.{ttf,otf,eot,woff,css}',
@@ -51,8 +53,10 @@ var path = {
         html: 'src/**/*.html',
         assets: 'src/assets/**/*.*',
         js: 'src/js/**/*.js',
+        jsStatic: 'src/js/static/**/*.js',
         style: ['src/scss/**/*.scss'],
         staticCSS: 'src/css/**/*.css',
+        pagesStyles: 'src/scss/pages/*.scss',
         img: 'src/img/**/*.*',
         fonts: 'src/fonts/**/*.{ttf,otf,eot,woff,css}',
         pages: 'src/pages/*.htm',
@@ -225,6 +229,15 @@ gulp.task('javascript', function () {
 
 });
 
+gulp.task('jsStatic', function () {
+
+    const b = gulp.src(path.src.jsStatic);
+
+    b// .pipe(sourcemaps.init())
+        .pipe(gulp.dest(path.build.js));
+
+});
+
 gulp.task('styles', function () {
 
     const b = gulp.src(path.src.style);
@@ -255,6 +268,34 @@ gulp.task('styles', function () {
 gulp.task('staticCSS', function () {
 
     const b = gulp.src(path.src.staticCSS);
+
+    b// .pipe(sourcemaps.init())
+        .pipe(sass({
+                includePaths: ['src/scss/'],
+                outputStyle: 'compressed',
+                sourceMap: true,
+                errLogToConsole: true,
+                functions: inline_image({url:'src/img/'})
+            })
+                .on("error", notify.onError(function (error) {
+                    return "Error: " + error.message;
+                }))
+        )
+        .pipe(prefixer())
+        .pipe(cssmin())
+        // .pipe(sourcemaps.write())
+        .pipe(gulp.dest(path.build.staticCSS));
+
+    if (process.env.NODE_ENV !== 'production') {
+        b.pipe(reload({stream: true}));
+    }
+
+});
+
+
+gulp.task('pagesStyles', function () {
+
+    const b = gulp.src(path.src.pagesStyles);
 
     b// .pipe(sourcemaps.init())
         .pipe(sass({
@@ -317,8 +358,10 @@ gulp.task('build_project' , [
     'assets',
     'vendors',
     'javascript',
+    'jsStatic',
     'styles',
     'staticCSS',
+    'pagesStyles',
     'fonts',
     'images',
     'localization'
@@ -356,8 +399,18 @@ gulp.task('watch', function(){
         }, 600);
     });
 
+    watch(path.watch.pagesStyles, function(event, cb) {
+        setTimeout(function(){
+            gulp.start('pagesStyles');
+        }, 600);
+    });
+
     watch([path.watch.js], function(event, cb) {
         gulp.start('javascript');
+    });
+
+    watch([path.watch.jsStatic], function(event, cb) {
+        gulp.start('jsStatic');
     });
 
     watch([path.watch.img], function(event, cb) {
