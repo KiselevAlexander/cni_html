@@ -8,12 +8,10 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     rigger = require('gulp-rigger'),
     cssmin = require('gulp-minify-css'),
-    imagemin = require('gulp-imagemin'),
+    image = require('gulp-image'),
     notify = require("gulp-notify"),
-    pngquant = require('imagemin-pngquant'),
     rimraf = require('rimraf'),
     browserSync = require("browser-sync"),
-    reload = browserSync.reload,
     htmlInjector = require("bs-html-injector"),
     inline_image = require('gulp-base64-image'),
     fileinclude = require('gulp-file-include'),
@@ -21,6 +19,8 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     jsonminify = require('gulp-jsonminify');
 
+const bSync = browserSync.create();
+const reload = bSync.reload;
 
 var PUBLIC_DIR = 'public';
 
@@ -39,12 +39,12 @@ var path = {
     src: {
         html: 'src/html/*.html',
         assets: 'src/assets/**/*.*',
-        js: ['src/js/**/*.js', '!src/js/static/'],
-        jsStatic: 'src/js/static/**/*.js',
+        js: 'src/js/**/*.js',
+        staticJS: 'src/js/static/**/*.js',
         style: ['src/scss/*.scss', '!src/scss/pages/'],
         pagesStyles: 'src/scss/pages/*.scss',
         staticCSS: 'src/scss/css/**/*.css',
-        img: 'src/img/**/*.*',
+        img: 'src/img/**/*',
         fonts: 'src/fonts/**/*.{ttf,otf,eot,woff,css}',
         pages: 'src/pages/*',
         localization: 'src/locales/**/*.json'
@@ -52,12 +52,12 @@ var path = {
     watch: {
         html: 'src/**/*.html',
         assets: 'src/assets/**/*.*',
-        js: 'src/js/**/*.js',
-        jsStatic: 'src/js/static/**/*.js',
-        style: ['src/scss/**/*.scss'],
-        staticCSS: 'src/css/**/*.css',
+        js: ['src/js/**/*.js', '!src/js/static/'],
+        staticJS: 'src/js/static/**/*.js',
+        style: ['src/scss/*.scss', '!src/scss/pages/'],
+        staticCSS: 'src/scss/pages/',
         pagesStyles: 'src/scss/pages/*.scss',
-        img: 'src/img/**/*.*',
+        img: 'src/img/**/*',
         fonts: 'src/fonts/**/*.{ttf,otf,eot,woff,css}',
         pages: 'src/pages/*.htm',
         localization: 'src/locales/**/*.json'
@@ -73,7 +73,7 @@ const config = {
     host: 'localhost',
     port: 3000,
     logPrefix: "CNI",
-    open: true
+    open: false
 };
 
 
@@ -229,9 +229,9 @@ gulp.task('javascript', function () {
 
 });
 
-gulp.task('jsStatic', function () {
+gulp.task('staticJS', function () {
 
-    const b = gulp.src(path.src.jsStatic);
+    const b = gulp.src(path.src.staticJS);
 
     b// .pipe(sourcemaps.init())
         .pipe(gulp.dest(path.build.js));
@@ -260,7 +260,7 @@ gulp.task('styles', function () {
         .pipe(gulp.dest(path.build.css));
 
     if (process.env.NODE_ENV !== 'production') {
-        b.pipe(reload({stream: true}));
+        b.pipe(bSync.stream());
     }
 
 });
@@ -320,21 +320,26 @@ gulp.task('pagesStyles', function () {
 
 });
 
-gulp.task('images', function () {
-    const b = gulp.src(path.src.img);
 
-    b.pipe(imagemin({
-        progressive: true,
-        svgoPlugins: [{removeViewBox: false}, {convertStyleToAttrs: false}],
-        use: [pngquant()],
-        interlaced: true
-    }))
-        .pipe(gulp.dest(path.build.img));
+// Production Copy and Optimize Images
+gulp.task('images', () =>
+    gulp
+        .src(path.src.img)
+        .pipe(image({
+            pngquant: true,
+            optipng: false,
+            zopflipng: false, // true,
+            jpegRecompress: false,
+            jpegoptim: true,
+            mozjpeg: true,
+            gifsicle: true,
+            svgo: true,
+            concurrent: 5
+        }))
+        .on('error', (e) => console.error('optimizeImages', e))
+        .pipe(gulp.dest(path.build.img))
+        .on('error', (e) => console.error('copyImages', e)));
 
-    if (process.env.NODE_ENV !== 'production') {
-        b.pipe(reload({stream: true}));
-    }
-});
 
 gulp.task('fonts', function() {
     gulp.src(path.src.fonts)
@@ -358,7 +363,7 @@ gulp.task('build_project' , [
     'assets',
     'vendors',
     'javascript',
-    'jsStatic',
+    'staticJS',
     'styles',
     'staticCSS',
     'pagesStyles',
@@ -405,12 +410,12 @@ gulp.task('watch', function(){
         }, 600);
     });
 
-    watch([path.watch.js], function(event, cb) {
+    watch(path.watch.js, function(event, cb) {
         gulp.start('javascript');
     });
 
-    watch([path.watch.jsStatic], function(event, cb) {
-        gulp.start('jsStatic');
+    watch([path.watch.staticJS], function(event, cb) {
+        gulp.start('staticJS');
     });
 
     watch([path.watch.img], function(event, cb) {
