@@ -14,11 +14,13 @@
         responsive : {
             0 : {
                 items: 1,
-                nav: false
+                nav: false,
+                center: true
             },
             480 : {
                 items: 2,
-                nav: false
+                nav: false,
+                center: true
             },
             768 : {
                 items: 4

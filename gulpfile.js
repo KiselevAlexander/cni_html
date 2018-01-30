@@ -11,7 +11,7 @@ var gulp = require('gulp'),
     image = require('gulp-image'),
     notify = require("gulp-notify"),
     rimraf = require('rimraf'),
-    browserSync = require("browser-sync"),
+    browserSync = require("browser-sync").create(),
     htmlInjector = require("bs-html-injector"),
     inline_image = require('gulp-base64-image'),
     fileinclude = require('gulp-file-include'),
@@ -19,8 +19,7 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     jsonminify = require('gulp-jsonminify');
 
-const bSync = browserSync.create();
-const reload = bSync.reload;
+const reload = browserSync.reload;
 
 var PUBLIC_DIR = 'public';
 
@@ -115,7 +114,7 @@ gulp.task('clean', () => gulp
 
 gulp.task('webserver', function () {
     browserSync.use(htmlInjector, {
-        files: "src/*.html"
+        files: "src/**/*.html"
     });
     browserSync.init(config);
 });
@@ -260,7 +259,7 @@ gulp.task('styles', function () {
         .pipe(gulp.dest(path.build.css));
 
     if (process.env.NODE_ENV !== 'production') {
-        b.pipe(bSync.stream());
+        b.pipe(browserSync.reload({stream:true}));
     }
 
 });
@@ -380,6 +379,7 @@ gulp.task('build',  ['apply-prod-environment', 'clean'], () => {
 
 
 gulp.task('watch', function(){
+
     watch([path.watch.html], function(event, cb) {
         gulp.start('html');
     });

@@ -7,6 +7,11 @@
         text-align: center;
         letter-spacing: 2px;
         text-transform: uppercase;
+
+            @include phablet {
+                text-align: center;
+                font-size: 38px;
+            }
     }
 
     h3 {
@@ -15,6 +20,11 @@
         letter-spacing: 1.6px;
         text-transform: uppercase;
         line-height: 40px;
+
+        @include phablet {
+            text-align: center;
+            font-size: 28px;
+        }
     }
 
     .graduates-hist {
@@ -27,6 +37,19 @@
             display: inline-block;
             letter-spacing: 3.3px;
 
+            @include phablet {
+                font-size: 20vw;
+                line-height: 1;
+                text-align: center;
+                display: block;
+            }
+
+            @include phone {
+                font-size: 40vw;
+                text-align: center;
+                display: block;
+            }
+
         }
 
         &__title {
@@ -37,6 +60,10 @@
             text-transform: uppercase;
             line-height: 39px;
             letter-spacing: 2.3px;
+
+            @include phablet {
+                text-align: center;
+            }
         }
 
         &__text {
@@ -46,6 +73,12 @@
             max-width: 400px;
             line-height: 17px;
             letter-spacing: 0.4px;
+
+            @include phablet {
+                text-align: center;
+                display: block;
+                margin: 0 auto;
+            }
         }
 
     }
@@ -65,6 +98,10 @@
                 position: absolute;
                 top: 81px;
                 width: 100%;
+
+                @media (max-width: 1217px) {
+                    top: 6.5vw;
+                }
 
                 [class^='arrow'] {
                     border-radius: 13px;
@@ -96,6 +133,11 @@
                     transform: translateX(-34px);
                     padding-left: 3px;
 
+                    @media (max-width: 1217px) {
+                        transform: none;
+                        left: 2%;
+                    }
+
                     &:before {
                         content: "\f104 ";
                         font-family: FontAwesome;
@@ -106,6 +148,11 @@
 
                 .arrow-right {
                     right: 0;
+
+                    @media (max-width: 1217px) {
+                        transform: none;
+                        right: 5%;
+                    }
 
                     &:before {
                         content: "\f105";
@@ -165,6 +212,10 @@
         h3 {
             text-align: left;
             margin-top: 20px;
+
+            @include phablet {
+                text-align: center;
+            }
         }
 
         &__text {
@@ -174,6 +225,11 @@
         }
 
         .citypicker {
+            padding-left: 8px;
+
+            @include phablet {
+                text-align: center;
+            }
 
             b {
                 text-transform: uppercase;
@@ -181,6 +237,15 @@
 
             span {
                 font-weight: normal;
+            }
+
+        }
+
+        .center-link {
+
+            @include phablet {
+                text-align: center;
+                margin-bottom: 40px;
             }
 
         }
@@ -317,6 +382,10 @@
 
         &__item {
             text-align: center;
+
+            @include phablet {
+                margin-bottom: 40px;
+            }
         }
     }
 
