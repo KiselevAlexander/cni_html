@@ -56,13 +56,75 @@
         &__slider {
             margin: 0;
             padding: 0;
+
+            &-container {
+                position: relative;
+            }
+
+            &-controls {
+                position: absolute;
+                top: 81px;
+                width: 100%;
+
+                [class^='arrow'] {
+                    border-radius: 13px;
+                    z-index: 10;
+                    text-align: center;
+                    width: 25px;
+                    height: 25px;
+                    line-height: 22px;
+                    background-color: #fff;
+                    border: 1px solid #000;
+                    color: #000;
+                    font-size: 18px;
+                    padding: 0;
+                    position: absolute;
+                    transition: .5s ease all;
+                    cursor: pointer;
+                    opacity: .7;
+
+                    &:hover {
+                        background-color: #000;
+                        color: #fff;
+                        border-color: #fff;
+                        opacity: 1;
+                    }
+                }
+
+                .arrow-left {
+                    box-sizing: border-box;
+                    transform: translateX(-34px);
+                    padding-left: 3px;
+
+                    &:before {
+                        content: "\f104 ";
+                        font-family: FontAwesome;
+                        margin-right: 3px;
+                    }
+
+                }
+
+                .arrow-right {
+                    right: 0;
+
+                    &:before {
+                        content: "\f105";
+                        font-family: FontAwesome;
+                        margin-left: 3px;
+                    }
+
+                }
+
+            }
+
         }
 
         &__item {
             font-family: 'proxima_nova_cn_ltlight', sans-serif;
             float: left;
-            width: 25%;
-            padding-right: 31px;
+            width: 100%;
+            padding-left: 15px;
+            padding-right: 15px;
 
             &-name {
                 font-size: 20px;
@@ -109,6 +171,18 @@
             margin-top: 28px;
             letter-spacing: 0.3px;
             line-height: 22.9px;
+        }
+
+        .citypicker {
+
+            b {
+                text-transform: uppercase;
+            }
+
+            span {
+                font-weight: normal;
+            }
+
         }
 
     }
@@ -245,4 +319,5 @@
             text-align: center;
         }
     }
+
 }
