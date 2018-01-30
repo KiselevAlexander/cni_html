@@ -136,7 +136,7 @@ gulp.task('html', function () {
             .on("error", notify.onError(function (error) {
                 return "Error: " + error.message;
             })))
-        .pipe(htmlmin({collapseWhitespace: true}))
+        // .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(path.build.html))
         .pipe(reload({stream: true}));
 });
