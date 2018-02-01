@@ -10,6 +10,7 @@
     cursor: pointer;
     color: #000;
     text-align: center;
+    transition: background .4s, color .4s;
 
     &:hover,
     &:focus,
@@ -33,4 +34,7 @@
         }
     }
 
+    &-rounded {
+        border-radius: 30px !important;
+    }
 }

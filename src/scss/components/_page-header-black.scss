@@ -1,0 +1,39 @@
+@import '../variables';
+
+.page-header-black {
+    background-color: #000;
+    color: #fff;
+
+    h1 {
+        color: #fff;
+    }
+
+    &__image {
+        background-size: cover;
+        @include phablet {
+            &:before {
+                display: block;
+                width: 1px;
+                padding-top: 100%;
+                content: '';
+            }
+        }
+    }
+
+    &__content {
+        padding-top: 40px;
+        padding-bottom: 80px;
+        padding-left: 40px;
+    }
+
+    &__phone {
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 40px;
+        a {
+            color: #fff;
+            font-size: 24px;
+            letter-spacing: 0.02em;
+        }
+    }
+}
